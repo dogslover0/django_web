@@ -25,7 +25,7 @@
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
     <script src="{% static 'assets/js/vendor/jquery.min.js' %}"></script>
-    <script src="{% static 'dist/js/bootstrap.min.jss' %}"></script>
+    <script src="{% static 'dist/js/bootstrap.min.js' %}"></script>
 
   </head>
 
@@ -71,7 +71,7 @@
                     <div id="collapseOne" class="panel-collapse collapse in">
                        <div class="panel-body">
                           <li><a href="{% url 'originaldata' %}">表格</a></li>
-                          <li><a href="">折线图</a></li>
+                          <li><a href="{% url 'data_description' %}">折线图</a></li>
                       </div>
                   </div>
                </div>

@@ -9,4 +9,7 @@ def showdata(request):
 
 def originaldata(request):
     datalist = basedata.objects.all()
-    return render(request, '原数据_表格.html', {"data": datalist})
+    return render(request, 'original_data_tab.html', {"data": datalist})
+
+def data_description(request):
+    return render(request, '折线图.html')

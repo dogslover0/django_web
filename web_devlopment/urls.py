@@ -20,5 +20,6 @@ from myAPP import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.showdata, name="home"),
-    path('originaldata', views.originaldata, name="originaldata"),
+    path('originaldata', views.originaldata, name="originaldata"),  #原数据页面
+    path('data_description', views.data_description, name="data_description"),  #原始数据折线图页面
 ]
