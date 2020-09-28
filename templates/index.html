@@ -70,7 +70,7 @@
                     </div>
                     <div id="collapseOne" class="panel-collapse collapse in">
                        <div class="panel-body">
-                          <li><a href="">表格</a></li>
+                          <li><a href="{% url 'originaldata' %}">表格</a></li>
                           <li><a href="">折线图</a></li>
                       </div>
                   </div>
@@ -148,6 +148,15 @@
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
   
              <h1>欢迎使用。。。</h1>
+                 <ul>
+                    {%for data in data%}
+                    <li>
+                       <a href="http://localhost/change">{{ forloop.counter }}--{{data.R }}--{{data.G}}--{{data.B}}--{{data.EX}}--{{data.LI}}--{{data.BF3}}--{{data.RF3}}--{{data.GF2}}</a>
+                    </li>
+                    {% empty %}
+                    <li>目前没有数据</li>
+                    {%endfor%}
+                </ul>
         </div>
       <!--右侧结束  -->
 

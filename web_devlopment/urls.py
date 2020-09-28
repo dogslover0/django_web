@@ -20,4 +20,5 @@ from myAPP import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.showdata, name="home"),
+    path('originaldata', views.originaldata, name="originaldata"),
 ]

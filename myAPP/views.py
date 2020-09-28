@@ -6,3 +6,7 @@ from myAPP.models import *
 def showdata(request):
     datalist = basedata.objects.all()
     return render(request, 'index.html', {"data": datalist})
+
+def originaldata(request):
+    datalist = basedata.objects.all()
+    return render(request, '原数据_表格.html', {"data": datalist})
