@@ -1,0 +1,22 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+</head>
+<link rel="stylesheet" type="text/css" href="{% static 'css/denglu.css' %}"/>
+<body>
+    <div id="login">
+        <h1>学生信息管理</h1>
+        <form method="post" action="denglu1">
+            {% csrf_token %}
+            <input type="text" required="required" placeholder="用户名" name="name">
+            <input type="password" required="required" placeholder="密码" name="password">
+            <button class="but" type="submit">登录</button>
+        </form>
+            <a class="bu" href="{% url 'Userregist' %}" >注册</a>
+    </div>
+</body>
+</html>
