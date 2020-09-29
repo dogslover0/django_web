@@ -1,0 +1,167 @@
+import enc as enc
+from matplotlib import pyplot
+from sklearn.preprocessing import OneHotEncoder, OrdinalEncoder, MinMaxScaler, StandardScaler, normalize, \
+    PolynomialFeatures
+from sklearn.tree._criterion import MAE
+from xgboost import XGBRegressor as XGBR
+from xgboost import plot_importance
+from sklearn.ensemble import RandomForestRegressor as RFR
+from sklearn.linear_model import LinearRegression as LinearR
+from sklearn.datasets import load_boston
+from sklearn.model_selection import KFold, cross_val_score as CVS, train_test_split as TTS
+from sklearn.metrics import  mean_squared_error as MSE
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+from time import time
+import datetime
+
+# data = load_boston()
+# x_train = data.data
+# y_train = data.target
+#
+# print(x_train)
+# print(y_train)
+
+#显示所有行
+# pd.set_option("display.max_rows",None)
+from canshu import adjust, adjust1
+
+data1 = pd.read_csv('C:/Users/win/Desktop/bbb/data3/三组分测试训练集1.csv')
+print(data1.describe())
+
+data1 = data1.drop_duplicates(subset=['R', 'G', 'B'])  #删除['R', 'G', 'B']重复行
+data1 = data1.reset_index()
+
+cc = '2GF'
+z = 2
+
+#光源曝光时间处理
+oneh = data1[['LI']]
+onehot = OneHotEncoder(categories='auto').fit_transform(oneh).toarray()
+onehot = pd.DataFrame(onehot)
+print("one—hot\n")
+print(onehot)
+Exposure = data1[['EX']]
+#Exposure = OrdinalEncoder().fit_transform(Exposure)
+Exposure = pd.DataFrame(Exposure)
+Exposure.rename(columns={0: 4}, inplace=True)
+print("曝光时间处理\n")
+print(Exposure)
+fea = ['R', 'G', 'B']
+train = data1[fea]
+print("取RGB")
+print(train)
+frames = [train, Exposure]
+x_train = pd.concat(frames, axis=1)
+
+print(x_train)
+po = PolynomialFeatures(degree=z, interaction_only=False, include_bias=False)
+x_train = po.fit_transform(x_train)
+x_train = pd.DataFrame(x_train)
+
+
+#数据预处理
+# x_train = MinMaxScaler().fit_transform(x_train) #实例化
+# x_train = pd.DataFrame(x_train)
+# print("数据处理\n")
+# print(x_train)
+
+
+y_features = [cc]
+y_train = data1[y_features]
+
+print("输出项")
+print(y_train)
+
+test = pd.read_csv('C:/Users/win/Desktop/bbb/data3/三组分测试测试集1.csv')
+
+
+test = test.drop_duplicates(subset=['R', 'G', 'B'])  #删除['R', 'G', 'B']重复行
+test = test.reset_index()
+
+oneh = test[['LI']]
+onehot = OneHotEncoder(categories='auto').fit_transform(oneh).toarray()
+onehot = pd.DataFrame(onehot)
+Exposuret = test[['EX']]
+#Exposuret = OrdinalEncoder().fit_transform(Exposuret)
+Exposuret = pd.DataFrame(Exposuret)
+Exposuret.rename(columns={0: 4}, inplace=True)
+print("曝光时间处理\n")
+print(Exposuret)
+xtest = test[fea]
+print("取RGB")
+frame = [xtest, Exposuret]
+x_test = pd.concat(frame, axis=1)
+
+y_test1 = [cc]
+y_test = test[y_test1]
+
+print("输出项")
+print(y_test)
+
+
+po = PolynomialFeatures(degree=z, interaction_only=False, include_bias=False)
+x_test = po.fit_transform(x_test)
+x_test = pd.DataFrame(x_test)
+
+#数据预处理
+# x_test = MinMaxScaler().fit_transform(x_test) #实例化
+# x_test = pd.DataFrame(x_test)
+
+Xtrain, Xtest, Ytrain, Ytest = x_train, x_test, y_train, y_test
+
+# Xtrain, Xtest, Ytrain, Ytest = TTS(x_train, y_train, test_size=0.3)  #切分训练集和测试集
+reg = XGBR(n_estimators=88, learning_rate=0.233083, subsample=0.1, max_depth=7, min_child_weight=5, reg_alpha=0.0701, reg_lambda=0.99).fit(Xtrain, Ytrain)     #训练模型
+test_result = reg.predict(Xtest)
+print("预测结果\n")
+print(pd.DataFrame(test_result))
+print(Xtest)
+print("模型拟合优度\n")
+print(reg.score(Xtest, Ytest))
+print("模型均方误差\n")
+print(MSE(Ytest, reg.predict(Xtest)))
+print("重要特征值\n")
+print(pd.DataFrame(reg.feature_importances_))
+bb = 0
+max = 0
+min = 10
+j = 0
+x = 0
+y = 0
+ll = len(test_result)
+
+Ytest=Ytest[cc].values.tolist()
+test_result=test_result.tolist()
+# print(Ytest)
+# print(test_result)
+for i in range(ll):
+    if Ytest[i]==0:
+        ll = ll-1
+    else:
+        result = (test_result[i] - Ytest[i])/Ytest[i]
+        if abs(result) > max:
+            max = abs(result)
+            maxid = int(i)
+        if abs(result) < min:
+            min = abs(result)
+            minid = int(i)
+    bb = bb + abs(result)
+print("平均误差\n")
+print((bb/ll)*100)
+
+for i in range(ll):
+    result = (test_result[i] - Ytest[i]) / Ytest[i]
+    if abs(result) < 0.1:
+        x = x + 1
+    if abs(result) > 0.1:
+        y = y + 1
+
+print("最大误差：%r最大值序号：%d" % (max*100, maxid))
+print("最小误差：%r最小值序号：%d" % (min*100, minid))
+print("误差小于0.1百分比：%r误差大于0.1百分比：%r" % (x/ll*100, y/ll*100))
+
+plot_importance(reg)
+pyplot.show()
+
+

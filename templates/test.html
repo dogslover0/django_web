@@ -1,0 +1,46 @@
+{% load static %}
+   <!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>添加页面</title>
+</head>
+<link rel="stylesheet" type="text/css" href="{% static 'css/css.css' %}">
+<body>
+    <div class="topnav">
+      <a href="{% url 'home' %}">主页</a>
+      <a class="active" href="{% url 'add' %}">添加学生或班级</a>
+      <a href="{% url 'delete' %}">删除学生或班级</a>
+    </div>
+    <h1>添加学生</h1>
+    <form action="regist" method="post">
+        {% csrf_token %}
+        姓名：<input type="text" name="name" value=""/>
+        <hr>
+        性别：<input type="radio" name="gender" value=True>男<input type="radio" name="gender" value=False>女
+        <hr>
+        年龄：<input type="text" name="age" value=""/>
+        <hr>
+        座右铭：<input type="text" name="motto" value=""/>
+        <hr>
+        班级：<input type="text" name="grade" value=""/>
+        <hr>
+        <input type="submit" value="添加">
+        <hr>
+    </form>
+    <h1>添加班级</h1>
+    <form action="Gregist" method="post">
+        {% csrf_token %}
+        班级名：<input type="text" name="name" value=""/>
+        <hr>
+        女生总数：<input type="text" name="girlnum" value=""/>
+        <hr>
+        男生总数：<input type="text" name="boynum" value=""/>
+        <hr>
+        <input type="submit" value="添加">
+    </form>
+</body>
+</html>

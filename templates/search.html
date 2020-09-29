@@ -1,0 +1,31 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>查询结果</title>
+</head>
+<link rel="stylesheet" type="text/css" href="{% static 'css/css.css' %}">
+<body>
+    <div class="topnav">
+        <a class="active">查询结果</a>
+        <a href="{% url 'home' %}">返回主页</a>
+    </div>
+    <h2>学生信息列表</h2>
+    <ul>
+        {%for student in students%}
+        <li>
+           <a>{{student.St_name }}--{{student.St_age}}--{% if student.St_gender %}男{% else %}女{% endif %}--{{student.St_motto}}--{{student.St_grade_id}}</a>
+        </li>
+        {%endfor%}
+    </ul>
+    <h2>班级信息列表</h2>
+    <ul>
+        {%for grade in grades%}
+        <li>
+            <a>{{grade.Gr_name }}&nbsp&nbsp&nbsp&nbsp&nbsp创建日期：{{grade.Gr_date}}&nbsp&nbsp&nbsp&nbsp&nbsp女生总数：{{grade.Gr_girlnum}}&nbsp&nbsp&nbsp&nbsp&nbsp男生总数：{{grade.Gr_boynum}}</a>
+        </li>
+        {%endfor%}
+    </ul>
+</body>
+</html>
