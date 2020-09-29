@@ -13,3 +13,4 @@ def originaldata(request):
 
 def data_description(request):
     return render(request, '折线图.html')
+
